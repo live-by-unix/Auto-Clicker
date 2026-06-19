@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<style>
+body{
+  width:200px;
+  font-family:sans-serif;
+  padding:12px;
+}
+input,button{
+  width:100%;
+  box-sizing:border-box;
+  margin-top:8px;
+}
+#status{
+  margin-top:10px;
+  color:#666;
+}
+</style>
+</head>
+<body>
+<h3>AutoClicker</h3>
+
+<input id="interval" type="number" min="1" value="100">
+
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+
+<div id="status">Stopped</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

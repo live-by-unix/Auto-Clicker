@@ -1,14 +1,14 @@
-const intervalInput = document.getElementById("interval");
-const status = document.getElementById("status");
+document.getElementById("start").onclick = async () => {
+  const interval = Number(document.getElementById("interval").value);
 
-chrome.storage.local.get(["interval"], ({interval}) => {
-  if(interval) intervalInput.value = interval;
-});
-
-async function send(action) {
   const [tab] = await chrome.tabs.query({
     active: true,
     currentWindow: true
+  });
+
+  chrome.storage.local.set({
+    interval,
+    targetTabId: tab.id
   });
 
   await chrome.scripting.executeScript({
@@ -17,21 +17,15 @@ async function send(action) {
   });
 
   chrome.tabs.sendMessage(tab.id, {
-    action,
-    interval: Number(intervalInput.value)
+    action: "start",
+    interval
   });
-}
-
-document.getElementById("start").onclick = async () => {
-  chrome.storage.local.set({
-    interval: Number(intervalInput.value)
-  });
-
-  await send("start");
-  status.textContent = "Running";
 };
 
 document.getElementById("stop").onclick = async () => {
-  await send("stop");
-  status.textContent = "Stopped";
+  const { targetTabId } = await chrome.storage.local.get("targetTabId");
+
+  chrome.tabs.sendMessage(targetTabId, {
+    action: "stop"
+  });
 };
